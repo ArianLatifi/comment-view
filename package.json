@@ -1,0 +1,134 @@
+{
+  "name": "comment-view",
+  "displayName": "Comment View",
+  "description": "Scans workspace files for comment flags and displays them in a structured tree view.",
+  "publisher": "arianlatifi",
+  "icon": "media/marketplaceicon.png",
+  "version": "1.0.0",
+  "engines": {
+    "vscode": "^1.138.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onView:commentView"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "Comment View",
+      "properties": {
+        "commentView.flags": {
+          "type": "object",
+          "default": {
+            "done": {
+              "icon": "pass-filled",
+              "color": "disabledForeground",
+              "description": "(Done)"
+            },
+            "urgent": {
+              "icon": "error",
+              "color": "charts.red",
+              "description": "CRITICAL"
+            },
+            "in-progress": {
+              "icon": "sync",
+              "color": "charts.yellow",
+              "description": "In Progress"
+            }
+          },
+          "description": "Map flag names (e.g. <done>, <urgent>) to visual styles in the sidebar view.",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "icon": {
+                "type": "string",
+                "description": "Codicon ID (e.g. bookmark, error, pass-filled, sync, alert, star)"
+              },
+              "color": {
+                "type": "string",
+                "description": "VS Code Theme Color ID (e.g. charts.red, charts.yellow, disabledForeground)"
+              },
+              "description": {
+                "type": "string",
+                "description": "Custom label suffix displayed in the sidebar item"
+              }
+            }
+          }
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "comment-view.toggleDone",
+        "title": "Toggle Done Status",
+        "icon": "$(check)"
+      },
+      {
+        "command": "comment-view.setFlag",
+        "title": "Set Flag...",
+        "icon": "$(tag)"
+      }
+    ],
+    "menus": {
+      "view/item/context": [
+        {
+          "command": "comment-view.toggleDone",
+          "when": "view == commentView && viewItem == todo",
+          "group": "inline"
+        },
+        {
+          "command": "comment-view.setFlag",
+          "when": "view == commentView && viewItem == todo",
+          "group": "1_modification@1"
+        },
+        {
+          "command": "comment-view.toggleDone",
+          "when": "view == commentView && viewItem == todo",
+          "group": "1_modification@2"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "commentViewer",
+          "title": "view comments",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "commentViewer": [
+        {
+          "id": "commentView",
+          "name": "comment view",
+          "icon": "media/icon.svg"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.138.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "24.x",
+    "typescript-eslint": "^8.61.1",
+    "eslint": "^10.5.0",
+    "typescript": "^6.0.3",
+    "@vscode/test-cli": "^0.0.15",
+    "@vscode/test-electron": "^3.0.0"
+  },
+  "overrides": {
+    "diff": "^8.0.4",
+    "serialize-javascript": "^7.0.6"
+  }
+}
