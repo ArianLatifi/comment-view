@@ -152,10 +152,36 @@ export class TodoTreeDataProvider implements vscode.TreeDataProvider<TodoTreeIte
     }
 
     /**
-     * Fast & reliable workspace scan
-     */
+ * Fast & reliable workspace scan that respects .gitignore and user exclude settings
+ */
     private async getFilesWithTodos(): Promise<TodoTreeItem[]> {
-        const files = await vscode.workspace.findFiles('**/*', '**/node_modules/**');
+        // Read workspace search/files exclude configurations
+        const config = vscode.workspace.getConfiguration();
+
+        // 1. Fetch search.exclude and files.exclude patterns
+        const searchExcludes = config.get<Record<string, boolean>>('search.exclude', {});
+        const filesExcludes = config.get<Record<string, boolean>>('files.exclude', {});
+
+        // Build a glob pattern for custom exclusions
+        const excludePatterns = Array.from(
+            new Set([
+                ...Object.keys(searchExcludes).filter((k) => searchExcludes[k]),
+                ...Object.keys(filesExcludes).filter((k) => filesExcludes[k]),
+                '**/node_modules/**',
+                '**/.venv/**',
+                '**/venv/**',
+                '**/.git/**'
+            ])
+        );
+
+        const userExcludes = vscode.workspace
+            .getConfiguration('commentView')
+            .get<string[]>('exclude', []);
+
+        const excludeGlob = `{${userExcludes.join(',')}}`;
+
+        const files = await vscode.workspace.findFiles('**/*', excludeGlob);
+
         const fileItems: TodoTreeItem[] = [];
 
         for (const file of files) {
@@ -174,7 +200,7 @@ export class TodoTreeDataProvider implements vscode.TreeDataProvider<TodoTreeIte
                     );
                 }
             } catch (e) {
-                // Skip unreadable files
+                // Skip unreadable binary or permission-restricted files
             }
         }
 

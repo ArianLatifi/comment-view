@@ -3,6 +3,10 @@
   "displayName": "Comment View",
   "description": "Scans workspace files for comment flags and displays them in a structured tree view.",
   "publisher": "arianlatifi",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ArianLatifi/comment-view"
+  },
   "icon": "media/marketplaceicon.png",
   "version": "1.0.0",
   "engines": {
@@ -19,6 +23,18 @@
     "configuration": {
       "title": "Comment View",
       "properties": {
+        "commentView.exclude": {
+          "type": "array",
+          "default": [
+            "**/node_modules/**",
+            "**/.venv/**",
+            "**/venv/**",
+            "**/.git/**",
+            "**/dist/**",
+            "**/build/**"
+          ],
+          "description": "Glob patterns to exclude from comment scanning."
+        },
         "commentView.flags": {
           "type": "object",
           "default": {

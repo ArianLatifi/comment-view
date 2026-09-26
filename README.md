@@ -48,6 +48,8 @@ Right-click any comment in the sidebar or click the hover actions to quickly tog
 
 ## ⚙️ Extension Settings
 
+### Custom Flags (`commentView.flags`)
+
 Define your own flags in VS Code **Settings** (`settings.json`) under `commentView.flags`:
 
 ```json
@@ -76,7 +78,7 @@ Define your own flags in VS Code **Settings** (`settings.json`) under `commentVi
 
 ```
 
-### Setting Properties
+#### Setting Properties
 
 | Property | Type | Description | Example |
 | --- | --- | --- | --- |
@@ -86,9 +88,24 @@ Define your own flags in VS Code **Settings** (`settings.json`) under `commentVi
 
 ---
 
+### Exclude Glob Patterns (`commentView.exclude`)
+
+Configure glob patterns to bypass heavy folders (e.g. `.venv`, `node_modules`, or build artifacts) during workspace scans:
+
+```json
+"commentView.exclude": [
+  "**/node_modules/**",
+  "**/.venv/**",
+  "**/venv/**",
+  "**/.git/**",
+  "**/dist/**",
+  "**/build/**"
+]
+
+```
+
+---
+
 ## 📦 License
 
 This extension is licensed under the [MIT License](https://www.google.com/search?q=LICENSE&utm_source=gemini).
-
-
-
